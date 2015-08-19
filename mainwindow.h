@@ -22,8 +22,6 @@ public:
 private slots:
     void on_pushButtonLoad_clicked();
     void on_pushButtonNew_clicked();
-    void slotOpen();
-
 
 private:
     Ui::MainWindow *ui;
