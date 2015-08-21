@@ -26,12 +26,16 @@ public:
     explicit GameWindow(QWidget *parent = 0);
     ~GameWindow();
 
+    void mousePressEvent(QMouseEvent *event);
+
 private:
     Ui::GameWindow *ui;
 
 private:
    void generateBoard();
-   void mousePressEvent(QMouseEvent *event);
+
+
+
 };
 
 #endif // GAMEWINDOW_H

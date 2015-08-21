@@ -3,13 +3,13 @@
 #include "gamewindow.h"
 
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
+    moveToCenter();
     mkDirektorie();
 }
 
@@ -31,10 +31,11 @@ void MainWindow::on_pushButtonLoad_clicked() //выбор файла сохра�
     QFile File(FileName);    //Устанавливаем имя открытого файла
     if (File.open(QIODevice::ReadOnly | QIODevice::Text)){   //Если текстовый файл открыт только для чтения...
        //задать имя файла
-       //читаем все содержимое в масив "игровой доски"
+       //читаем последнюю строку истории и загружаем в масив доски
        //ui-> масив
         QMessageBox::information(0, "Information", "Operation Complete");
         File.close(); //закрываем открытый файл
+                      //запускаем игру
     }
     else{  //Если при открытии файла возникла ошибка выводим диалоговое окно с сообщением,
             //содержащим имя файла, одну кнопку «Ок» и заголовок «Error»
@@ -47,19 +48,38 @@ void MainWindow::on_pushButtonLoad_clicked() //выбор файла сохра�
 
 void MainWindow::on_pushButtonNew_clicked()
 {
-     GameWindow *gm = new GameWindow; //загружаем окно игрового поля
+
+    GameWindow *gm = new GameWindow; //загружаем окно игрового поля
      gm->setParent(this);
      gm->show();
+
 }
 
-void MainWindow::mkDirektorie()
+void MainWindow::mkDirektorie() //создание директории для файлов сохранения
 {
     QDir::currentPath();
 
-    if (QDir().exists("savegame")){
-       return;
+    if (QDir().exists("savegame")){ //если папка уже создана
+       return;                      //выходим из метода
     }
-
-    else
-      QDir().mkdir("savegame");
+    else{                           //ели папка отсутствует
+      QDir().mkdir("savegame");    //создаем
+    }
 }
+
+void MainWindow::closeEvent(QCloseEvent *event) //обрабатываем событие закрытия окна игры
+{
+    //спрашиваем - действительно ли нужно закрыть?
+     event->accept();   //подтверждаем событие и закрываем приложение
+}
+
+void MainWindow::moveToCenter(){
+    QDesktopWidget desktop;
+    QRect rect = desktop.availableGeometry(desktop.primaryScreen()); // прямоугольник с размерами экрана
+    QPoint center = rect.center(); //координаты центра экрана
+    center.setX(center.x() - (this->width()/2));  // учитываем половину ширины окна
+    center.setY(center.y() - (this->height()/2));  // .. половину высоты
+    move(center);
+}
+
+

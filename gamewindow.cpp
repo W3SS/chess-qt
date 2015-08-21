@@ -1,6 +1,8 @@
 #include "gamewindow.h"
 #include "ui_gamewindow.h"
 
+
+
 GameWindow::GameWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::GameWindow)
@@ -14,6 +16,7 @@ GameWindow::~GameWindow()
 {
     delete ui;
 }
+
 
 
 void GameWindow::generateBoard() //Рисуем игральную доску
@@ -39,11 +42,16 @@ void GameWindow::generateBoard() //Рисуем игральную доску
         if(isWhite) isWhite = false;
         else isWhite = true;
     }
-/*  //расставляем фигуры
-    //начальные координаты
+
+
+  //расставляем фигуры , пока так
+
 
     int posX = 0;
     int posY = 0;
+
+
+
 
     // Раставляем фигуры
     QGraphicsPixmapItem *figure = 0;
@@ -143,13 +151,21 @@ void GameWindow::generateBoard() //Рисуем игральную доску
         figure->setPos(posX, posY);
         if(figure) whiteFigures.append(figure);
     }
-    */
+
 
 
 }
 
 
-void GameWindow::mousePressEvent(QMouseEvent *event)
+void GameWindow::mousePressEvent(QMouseEvent *event) //обрабатываем событе нажатия кнопки мыши
 {
-   // validate(this,++count);
+    // Проверяем альтернативные ходы
+    // AlternateTurn(this,++count);
+
+    //сохраняем историю игры в файл после каждого хода
+    //saveGame();м
+
 }
+
+
+

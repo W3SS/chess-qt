@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     gamewindow.cpp
 
 HEADERS  += mainwindow.h \
-    gamewindow.h
+    gamewindow.h \
+    alternateturn.h
 
 FORMS    += mainwindow.ui \
     gamewindow.ui
