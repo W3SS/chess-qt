@@ -31,6 +31,7 @@ private:
 
 private:
    void generateBoard();
+   void mousePressEvent(QMouseEvent *event);
 };
 
 #endif // GAMEWINDOW_H

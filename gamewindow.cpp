@@ -19,11 +19,11 @@ GameWindow::~GameWindow()
 void GameWindow::generateBoard() //Рисуем игральную доску
 {
 
-    scene = new QGraphicsScene();
+    scene = new QGraphicsScene(); //Новая графическая сцена
     scene->setSceneRect(0, 0, 800, 800);
     ui->graphicsView->setScene(scene);
 
-    bool isWhite = true;
+    bool isWhite = true;  //Рисуем саму доску
     for(int y = 0; y < 800; y += 100)
     {
         for(int x = 0; x < 800; x += 100)
@@ -39,6 +39,7 @@ void GameWindow::generateBoard() //Рисуем игральную доску
         if(isWhite) isWhite = false;
         else isWhite = true;
     }
+/*  //расставляем фигуры
     //начальные координаты
 
     int posX = 0;
@@ -142,4 +143,13 @@ void GameWindow::generateBoard() //Рисуем игральную доску
         figure->setPos(posX, posY);
         if(figure) whiteFigures.append(figure);
     }
+    */
+
+
+}
+
+
+void GameWindow::mousePressEvent(QMouseEvent *event)
+{
+   // validate(this,++count);
 }

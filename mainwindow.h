@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDir>
@@ -22,6 +22,7 @@ public:
 private slots:
     void on_pushButtonLoad_clicked();
     void on_pushButtonNew_clicked();
+    void mkDirektorie();
 
 private:
     Ui::MainWindow *ui;
