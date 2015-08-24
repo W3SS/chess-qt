@@ -1,79 +1,56 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "gamewindow.h"
-
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    setWindowTitle(trUtf8("Chess"));
+    setWindowIcon(QIcon("://images/black_king.png"));
     moveToCenter();
-    mkDirektorie();
+    mkDir();
+
+    scene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(scene);
+    scene->setBackgroundBrush(Qt::lightGray);
+
+    ellipse = scene->addEllipse(0,0,150,150,QPen(Qt::gray),QBrush(Qt::white));
+    saver = scene->addPixmap(QPixmap("://images/black_king.png"));
+    saver->setPos(25, 25);
+
+    connect(ui->loadButton, SIGNAL(clicked()),SLOT(showLoad())); //показываем окно загрузки сохраненной игры
+    connect(ui->loadButton, SIGNAL(clicked()),SLOT(hide())); //делаем невидимым главное окно
+
+    connect(ui->newButton, SIGNAL(clicked()),SLOT(showNew()));
+    connect(ui->newButton, SIGNAL(clicked()),SLOT(hide()));
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-
 }
 
-void MainWindow::on_pushButtonLoad_clicked() //выбор файла сохранненой игры
+void MainWindow::showLoad() //загружаем диалог выбора сохранений
 {
-     QString FileName=QFileDialog::getOpenFileName(this,"Open file...", QDir::currentPath(), "Savefiles(*.sg)");
-    //Вызвать системный диалог открытия файла пока в домашней папке пользователя потом в папке игры "save"
-
-    if (FileName.isEmpty()){ //Если пользователь не выбрал ни одного файла
-        return;              //выйти из метода
-    }
-
-    QFile File(FileName);    //Устанавливаем имя открытого файла
-    if (File.open(QIODevice::ReadOnly | QIODevice::Text)){   //Если текстовый файл открыт только для чтения...
-       //задать имя файла
-       //читаем последнюю строку истории и загружаем в масив доски
-       //ui-> масив
-        QMessageBox::information(0, "Information", "Operation Complete");
-        File.close(); //закрываем открытый файл
-                      //запускаем игру
-    }
-    else{  //Если при открытии файла возникла ошибка выводим диалоговое окно с сообщением,
-            //содержащим имя файла, одну кнопку «Ок» и заголовок «Error»
-        QMessageBox::warning(this,"Error", QString("Could not open file %1 for reading").arg(File.fileName()), QMessageBox::Ok);
-
-    }
-
+    this->hide();
+    loadw = new LoadWindow(this);
+    loadw->show();
+    connect(loadw,SIGNAL(stop()),this,SLOT(show()));
 }
 
-
-void MainWindow::on_pushButtonNew_clicked()
+void MainWindow::showNew() //загружаем окно игры
 {
-
-    GameWindow *gm = new GameWindow; //загружаем окно игрового поля
-     gm->setParent(this);
-     gm->show();
-
+    this->hide();
+    gamew = new GameWindow(this);
+    gamew->resize(QSize(900,900));
+    gamew->show();
+    connect(gamew,SIGNAL(stop()),this,SLOT(show()));
 }
 
-void MainWindow::mkDirektorie() //создание директории для файлов сохранения
+void MainWindow::moveToCenter()
 {
-    QDir::currentPath();
-
-    if (QDir().exists("savegame")){ //если папка уже создана
-       return;                      //выходим из метода
-    }
-    else{                           //ели папка отсутствует
-      QDir().mkdir("savegame");    //создаем
-    }
-}
-
-void MainWindow::closeEvent(QCloseEvent *event) //обрабатываем событие закрытия окна игры
-{
-    //спрашиваем - действительно ли нужно закрыть?
-     event->accept();   //подтверждаем событие и закрываем приложение
-}
-
-void MainWindow::moveToCenter(){
     QDesktopWidget desktop;
     QRect rect = desktop.availableGeometry(desktop.primaryScreen()); // прямоугольник с размерами экрана
     QPoint center = rect.center(); //координаты центра экрана
@@ -82,4 +59,17 @@ void MainWindow::moveToCenter(){
     move(center);
 }
 
+void MainWindow::mkDir()
+{
+    QDir::currentPath();
+    if (QDir().exists("save"))       //если папка уже создана
+        return;                      //выходим из метода
+    else                             //если папка отсутствует
+    {
+      if (QDir().mkdir("save"))      //создаем
+         return;                     //и выходим из метода
+      else                           //если при создании возникла ошибка выводим диалоговое окно с сообщением.
+          QMessageBox::warning(this, "Error",QString("Could not create a save directory !"), QMessageBox::Ok);
+    }
 
+}

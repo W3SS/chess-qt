@@ -1,23 +1,20 @@
 #ifndef GAMEWINDOW_H
 #define GAMEWINDOW_H
 
-#include <QMainWindow>
-
-#include "QGraphicsView"
-#include "QGraphicsScene"
-#include "QGraphicsPixmapItem"
-#include "QVector"
+#include <QDialog>
+#include <QtCore>
+#include <QtGui>
+#include <QGraphicsScene>
+#include <QGraphicsItem>
+#include <QMessageBox>
 
 namespace Ui {
 class GameWindow;
 }
 
-class GameWindow : public QMainWindow
+class GameWindow : public QDialog
 {
     Q_OBJECT
-
-
-    QGraphicsScene *scene;
 
     QVector<QGraphicsPixmapItem*> whiteFigures;
     QVector<QGraphicsPixmapItem*> blackFigures;
@@ -26,16 +23,19 @@ public:
     explicit GameWindow(QWidget *parent = 0);
     ~GameWindow();
 
-    void mousePressEvent(QMouseEvent *event);
+signals:
+     void stop();
+
+private slots:
+    void mkBoard();
+
+protected:
+    void closeEvent(QCloseEvent* event);
 
 private:
     Ui::GameWindow *ui;
-
-private:
-   void generateBoard();
-
-
-
+    QGraphicsScene *scene;
+    QGraphicsPixmapItem *figure;
 };
 
 #endif // GAMEWINDOW_H

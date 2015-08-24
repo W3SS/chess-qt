@@ -2,16 +2,17 @@
 #define MAINWINDOW_H
 
 #include "gamewindow.h"
+#include "loadwindow.h"
 
 #include <QMainWindow>
-#include <QInputDialog>
-#include <QFileDialog>
+#include <QDesktopWidget>
 #include <QMessageBox>
 #include <QDir>
-#include <QRect>
-#include <QDesktopWidget>
-
-#include <QCloseEvent>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsEllipseItem>
+#include <QGraphicsItem>
+#include <QtGui>
 
 namespace Ui {
 class MainWindow;
@@ -25,22 +26,25 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+signals:
+     void loadButton();
+     void newButton();
+
 private slots:
-    void on_pushButtonLoad_clicked();
-    void on_pushButtonNew_clicked();
-    void mkDirektorie();
+    void mkDir();
     void moveToCenter();
-
-
-protected:
-    void closeEvent(QCloseEvent* event);
+    void showLoad();
+    void showNew();
 
 private:
     Ui::MainWindow *ui;
-    GameWindow* form1;
+    QGraphicsScene *scene;
+    QGraphicsPixmapItem *saver;
+    QGraphicsEllipseItem *ellipse;
+    LoadWindow *loadw;
+    GameWindow *gamew;
 
 
 };
 
 #endif // MAINWINDOW_H
-
